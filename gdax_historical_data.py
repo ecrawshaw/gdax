@@ -23,7 +23,7 @@ public_client = gdax.PublicClient()
 start_date = dt.datetime.strptime('11Nov2017', '%d%b%Y')
 timedelta = dt.timedelta(hours=1)
 end_date = start_date + timedelta
-timecut = '60'
+timecut = '60' #in seconds
 
 for t in range(0,100):
     start_date = start_date + timedelta
@@ -44,10 +44,6 @@ ltc_price_data = public_client.get_product_historic_rates('LTC-USD', granularity
 ltc = pd.DataFrame(ltc_price_data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
 ltc = ltc.set_index('time')
 
-
-#save to csv?
-#df.to_csv('price_info.csv')
-
 #read the csv and perform operations
 #df = pd.read_csv('price_info.csv', parse_dates=True, index_col=1)
 
@@ -64,17 +60,10 @@ def coin_df_operations(df, coin_name):
     df_volume = df['volume'].resample('24H').sum()
     df_ohlc.index = df_ohlc.index.map(mdates.date2num)
     df_ohlc.reset_index(inplace=True)
-
+    
+    #output data to .csv
     df.to_csv(coin_name + '.csv')
-    #sets up the upper and lower plot? not really sure
-    # ax1 = plt.subplot2grid((6,1),(0,0), rowspan=5, colspan=1)
-    # ax2 = plt.subplot2grid((6,1),(5,0), rowspan=1, colspan=1, sharex=ax1)
-    # ax1.xaxis_date()
-    #
-    # #creates the candlestick portions
-    # candlestick_ohlc(ax1, df_ohlc.values, width=.01, colorup='g')
-    # ax2.fill_between(df_volume.index.map(mdates.date2num), df_volume.values, 0)
-    # #plt.show()
+
 
 
 #loops through the list of coins
