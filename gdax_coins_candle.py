@@ -6,38 +6,18 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.finance import candlestick_ohlc
 import matplotlib.dates as mdates
-#style.use('ggplot')
-
 
 #gets price data
 public_client = gdax.PublicClient()
 
-start_date = '2017-11-1'
-end_date = '2017-11-15'
-timecut = '3600'
-
-btc_price_data = public_client.get_product_historic_rates('BTC-USD', granularity = timecut, start = start_date, end = end_date)
-btc = pd.DataFrame(btc_price_data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
-btc = btc.set_index('time')
-
-eth_price_data = public_client.get_product_historic_rates('ETH-USD', granularity = timecut, start = start_date, end = end_date)
-eth = pd.DataFrame(eth_price_data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
-eth = eth.set_index('time')
-
-ltc_price_data = public_client.get_product_historic_rates('LTC-USD', granularity = timecut, start = start_date, end = end_date)
-ltc = pd.DataFrame(ltc_price_data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
-ltc = ltc.set_index('time')
-
 def coin_df_operations(df, coin_name):
     #converts unix time to readable time based on the coin dataframe passed to it
-    print(df.head())
     df['regular time'] = pd.to_datetime(df.index,unit='s')
 
     #converts the index to datetime so we can resample
     df.index = pd.to_datetime(df.index, unit='s')
-    print(df.head())
 
-    #resamples close and volume data for a 24 hour time period, the plots
+    #resamples close and volume data, the plots
     df_ohlc = df['close'].resample('24H').ohlc()
     df_volume = df['volume'].resample('24H').sum()
     df_ohlc.index = df_ohlc.index.map(mdates.date2num)
@@ -56,9 +36,8 @@ def coin_df_operations(df, coin_name):
 
 
 #loops through the list of coins
-coins = [btc,eth,ltc]
 coin_names = ['btc', 'eth', 'ltc']
-for i in range(0,len(coins)):
+for i in range(0,len(coin_names)):
     #read the csv and perform operations
     csv_file = pd.read_csv(coin_names[i] + '.csv', parse_dates=True, index_col=1)
     df = pd.DataFrame(csv_file, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
