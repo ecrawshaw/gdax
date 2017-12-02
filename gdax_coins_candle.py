@@ -37,7 +37,7 @@ def coin_df_operations(df, coin_name):
     df.index = pd.to_datetime(df.index, unit='s')
     print(df.head())
 
-    #resamples close and volume data, the plots
+    #resamples close and volume data for a 24 hour time period, the plots
     df_ohlc = df['close'].resample('24H').ohlc()
     df_volume = df['volume'].resample('24H').sum()
     df_ohlc.index = df_ohlc.index.map(mdates.date2num)
