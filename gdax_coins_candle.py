@@ -28,15 +28,9 @@ ltc_price_data = public_client.get_product_historic_rates('LTC-USD', granularity
 ltc = pd.DataFrame(ltc_price_data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
 ltc = ltc.set_index('time')
 
-
-#save to csv?
-#df.to_csv('price_info.csv')
-
-#read the csv and perform operations
-#df = pd.read_csv('price_info.csv', parse_dates=True, index_col=1)
-
 def coin_df_operations(df, coin_name):
     #converts unix time to readable time based on the coin dataframe passed to it
+    print(df.head())
     df['regular time'] = pd.to_datetime(df.index,unit='s')
 
     #converts the index to datetime so we can resample
@@ -65,5 +59,8 @@ def coin_df_operations(df, coin_name):
 coins = [btc,eth,ltc]
 coin_names = ['btc', 'eth', 'ltc']
 for i in range(0,len(coins)):
-    coins[i] = coin_df_operations(coins[i], coin_names[i])
-
+    #read the csv and perform operations
+    csv_file = pd.read_csv(coin_names[i] + '.csv', parse_dates=True, index_col=1)
+    df = pd.DataFrame(csv_file, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
+    df = df.set_index('time')
+    coin_df_operations(df, coin_names[i])
