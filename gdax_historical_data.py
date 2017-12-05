@@ -31,7 +31,7 @@ ltc = pd.DataFrame(ltc_price_data, columns=['time', 'low', 'high', 'open', 'clos
 ltc = ltc.set_index('time')
 
 def coin_df_operations(df, coin_name, start_date, end_date, timedelta, timecut):
-    #number of you want to repeat your timedelta
+    #number of times you want to repeat your timedelta
     repeats = 365
     print('\n')
     print(coin_name)
@@ -42,6 +42,7 @@ def coin_df_operations(df, coin_name, start_date, end_date, timedelta, timecut):
         #sys.stdout.write('[%.2f%%]' % (100*j,1*t))
         sys.stdout.flush()
 
+        #time operations
         start_date = start_date + timedelta
         end_date = end_date + timedelta
 
